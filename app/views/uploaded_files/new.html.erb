@@ -1,0 +1,24 @@
+<h1>ファイルアップロード</h1>
+
+<%= form_with(model: @uploaded_file, url: uploaded_files_path, local: true) do |form| %>
+  <% if @uploaded_file.errors.any? %>
+    <div style="color: red; margin-bottom: 20px;">
+      <h2><%= pluralize(@uploaded_file.errors.count, "error") %> prohibited this file from being uploaded:</h2>
+      <ul>
+        <% @uploaded_file.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div style="margin-bottom: 15px;">
+    <%= form.label :file, "ファイルを選択" %>
+    <%= form.file_field :file, required: true, style: "display: block; margin-top: 5px;" %>
+  </div>
+
+  <div>
+    <%= form.submit "アップロード", style: "background-color: #007bff; color: white; border: none; padding: 10px 20px; cursor: pointer;" %>
+    <%= link_to "キャンセル", uploaded_files_path, style: "margin-left: 10px;" %>
+  </div>
+<% end %>

@@ -1,0 +1,48 @@
+<h1>アップロード済みファイル一覧</h1>
+
+<div style="margin-bottom: 20px;">
+  <%= link_to "新しいファイルをアップロード", new_uploaded_file_path, class: "button" %>
+  <%= link_to "ログアウト", destroy_user_session_path, data: { turbo_method: :delete }, class: "button" %>
+</div>
+
+<% if @uploaded_files.any? %>
+  <table border="1" cellpadding="10" style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th>ファイル名</th>
+        <th>アップロード日時</th>
+        <th>ファイルパス</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @uploaded_files.each do |uploaded_file| %>
+        <tr>
+          <td>
+            <% if uploaded_file.file.attached? %>
+              <%= link_to uploaded_file.file.filename, rails_blob_path(uploaded_file.file, disposition: "attachment") %>
+            <% else %>
+              ファイルなし
+            <% end %>
+          </td>
+          <td><%= uploaded_file.uploaded_at.strftime("%Y年%m月%d日 %H:%M:%S") %></td>
+          <td>
+            <% if uploaded_file.file.attached? %>
+              <%= uploaded_file.file.blob.key %>
+            <% else %>
+              N/A
+            <% end %>
+          </td>
+          <td>
+            <%= button_to "削除", uploaded_file_path(uploaded_file),
+                method: :delete,
+                data: { turbo_confirm: "本当に削除しますか？" },
+                style: "background-color: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer;" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>アップロードされたファイルはありません。</p>
+<% end %>
